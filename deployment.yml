@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-unity-cube-deployment
+  labels:
+    app: react-unity-cube
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react-unity-cube
+  template:
+    metadata:
+      labels:
+        app: react-unity-cube
+    spec:
+      containers:
+      - name: react-unity-cube
+        image: registry.local:5000/react-unity-cube:v5
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-unity-cube-service
+spec:
+  selector:
+    app: react-unity-cube
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: react-unity-cube-service
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: react-unity-cube-service
+          servicePort: 8080
