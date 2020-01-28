@@ -1,26 +1,40 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Unity, { UnityContent } from "react-unity-webgl";
 
-const App: React.FC = () => {
+const unityContent = new UnityContent(
+  "unity/Build/unity.json",
+  "unity/Build/UnityLoader.js"
+);
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="unity-canvas">
+      <Unity className="unity" unityContent={unityContent} />
+      <div className="overlay">
+        <h1>Hello World!</h1>
+        <button onClick={onLeft}>Left</button>
+        <button onClick={onRight}>Right</button>
+      </div>
     </div>
   );
 }
 
+const onLeft = () => {
+  unityContent.send(
+    "CubeController", 
+    "Move", 
+    -1
+  );
+}
+
+const onRight = () => {
+  unityContent.send(
+    "CubeController", 
+    "Move", 
+    1
+  );
+}
+
 export default App;
+  
